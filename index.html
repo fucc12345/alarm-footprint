@@ -1,194 +1,140 @@
-<!doctype html>
+-<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<meta name="theme-color" content="#0b1220" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Carbon Footprint Knower</title>
 <style>
-:root{--bg:#0b1220;--fg:#e8eef7;--muted:#9fb0c9;--card:#10192b;--line:rgba(255,255,255,.06);--glass:rgba(255,255,255,.03);--safe:#10b981;--edge:#f59e0b;--danger:#ef4444;--accent:#60a5fa;color-scheme:dark}
-*{box-sizing:border-box}html,body{height:100%}body{margin:0;font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,#071224,#09172e);color:var(--fg);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;padding:16px;display:flex;align-items:center;justify-content:center}
-.app{width:100%;max-width:1080px;display:grid;grid-template-columns:1fr 400px;gap:14px}
-.panel{background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.015));border:1px solid var(--line);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.35);padding:14px}
-.app-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
-.h1{margin:0;font-weight:700;letter-spacing:.2px;font-size:18px}
-.muted{color:var(--muted)}
-.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:8px}
-.card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));padding:10px;border-radius:12px;border:1px solid var(--line)}
-label{font-size:12px;color:var(--muted);display:block;margin:6px 0 6px}
-input[type=number],select{width:100%;padding:10px 10px;border-radius:10px;border:1px solid var(--line);background:transparent;color:inherit;appearance:textfield}
-input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{margin:0;-webkit-appearance:none}
-.row{display:flex;gap:8px;align-items:center}
-.btn{border:0;border-radius:12px;padding:10px 12px;cursor:pointer}
-.btn-primary{background:linear-gradient(90deg,var(--accent),#8ecbff);color:#04121f;font-weight:800;box-shadow:0 8px 20px rgba(64,145,230,.18)}
-.btn-ghost{background:transparent;border:1px solid var(--line);color:var(--fg)}
-.results{display:none;flex-direction:column;gap:8px;margin-top:8px}
-.big{font-size:26px;font-weight:800}
-.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:10px;background:var(--glass);border:1px solid var(--line)}
-.side{display:flex;flex-direction:column;gap:10px}
-.visual{height:320px;border-radius:14px;padding:12px;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;position:relative;overflow:hidden}
-.status{position:absolute;left:12px;top:12px;display:flex;gap:8px;align-items:center}
-.dot{width:10px;height:10px;border-radius:50%}
-.tree{width:200px;height:200px;position:relative}
-.trunk{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:34px;height:80px;background:linear-gradient(#3a2a18,#694023);border-radius:12px;box-shadow:inset 0 -6px 12px rgba(0,0,0,.4)}
-.leaves{position:absolute;left:50%;bottom:66px;transform:translateX(-50%) scale(.6);width:160px;height:145px;background:radial-gradient(40% 40% at 30% 30%,rgba(110,200,140,.95),rgba(40,120,80,.95));border-radius:50%;box-shadow:0 16px 55px rgba(20,60,40,.55);transform-origin:50% 100%}
-.balloon{position:absolute;right:16px;bottom:24px;width:80px;height:100px;border-radius:50%;background:linear-gradient(#e6edf8,#c6d7f4);display:flex;align-items:center;justify-content:center;font-weight:800;color:#07263f;box-shadow:0 18px 36px rgba(2,10,30,.6)}
-.ground{position:absolute;left:0;right:0;bottom:0;height:28px;background:linear-gradient(#06202d,#072432);box-shadow:inset 0 6px 30px rgba(0,0,0,.6)}
-.tip{background:var(--glass);padding:10px;border-radius:10px;border:1px solid var(--line)}
-.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
-.snap-row{display:flex;justify-content:space-between;align-items:center;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,.02)}
-@media (max-width:960px){body{padding:12px}.app{grid-template-columns:1fr}.visual{height:260px}}
-@media (prefers-reduced-motion:reduce){*{animation:none;transition:none}}
+  :root{
+    --bg:#f8fafc;
+    --text:#0f172a;
+    --muted:#64748b;
+    --card:#ffffff;
+    --primary:#2563eb;
+    --secondary:#16a34a;
+    --warning:#f59e0b;
+    --danger:#dc2626;
+    --accent:#0ea5e9;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:system-ui, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    padding:20px;
+    display:flex;
+    justify-content:center;
+  }
+  .app{width:100%;max-width:1100px;display:grid;grid-template-columns:1fr 380px;gap:20px}
+  .panel{background:var(--card);border-radius:12px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,0.08)}
+  h1{font-size:22px;margin-bottom:4px}
+  p{color:var(--muted)}
+  .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:16px}
+  .card{background:#f9fafb;border-radius:10px;padding:14px;border:1px solid #e2e8f0}
+  label{font-size:14px;font-weight:500;color:var(--text);display:block;margin-bottom:6px}
+  input,select{width:100%;padding:8px 10px;border-radius:8px;border:1px solid #cbd5e1;font-size:14px}
+  input:focus,select:focus{border-color:var(--accent);outline:none}
+  button{cursor:pointer;border:none;font-weight:600;border-radius:8px}
+  .primary{background:var(--primary);color:#fff;padding:10px 14px}
+  .ghost{background:#f1f5f9;color:var(--text);padding:8px 12px}
+  .results{margin-top:16px;display:none}
+  .big-num{font-size:28px;font-weight:700}
+  .sub{font-size:13px;color:var(--muted)}
+  .tip{background:#f1f5f9;padding:10px;border-radius:8px}
+  .visual{height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#f9fafb;border-radius:12px;border:1px solid #e2e8f0}
+  .balloon{margin-top:12px;padding:10px 16px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;box-shadow:0 6px 16px rgba(0,0,0,0.2)}
+  .score{background:#f1f5f9;border:1px solid #e2e8f0;padding:6px 10px;border-radius:8px;font-size:14px;display:inline-flex;gap:6px;align-items:center}
+  @media(max-width:900px){.app{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<main class="app" role="main" aria-labelledby="app-title">
-  <section class="panel" aria-labelledby="app-title">
-    <div class="app-head">
-      <div>
-        <h1 id="app-title" class="h1">Carbon Footprint Knower</h1>
-        <p class="muted">Quick · Interactive · Actionable</p>
-      </div>
-      <div style="text-align:right">
-        <div class="badge" id="greenScoreBadge" title="Your Green Score"><span id="scoreStars" aria-hidden="true">🌱🌱🌱</span><strong id="greenScoreText">Score 0</strong></div>
-        <div class="muted" style="margin-top:4px;font-size:12px">Saved locally</div>
-      </div>
-    </div>
+<main class="app">
+  <section class="panel">
+    <h1>🌍 Carbon Footprint Knower</h1>
+    <p>Interactive • Fast • Actionable</p>
 
     <div class="form-grid">
       <div class="card">
-        <label for="transportType">Transport — primary</label>
-        <select id="transportType" autocomplete="off">
-          <option value="car">Car (petrol/diesel)</option>
-          <option value="motorbike">Motorbike / Scooter</option>
-          <option value="bus">Bus</option>
-          <option value="train">Train</option>
-          <option value="cycling">Bicycle / Walking</option>
-          <option value="flight">Flights (domestic)</option>
+        <label>Transport</label>
+        <select id="transportType">
+          <option value="car">🚗 Car</option>
+          <option value="motorbike">🛵 Motorbike</option>
+          <option value="bus">🚌 Bus</option>
+          <option value="train">🚆 Train</option>
+          <option value="cycling">🚴 Bicycle/Walk</option>
+          <option value="flight">✈️ Flight</option>
         </select>
-        <label for="transportKm">Avg distance per trip (km)</label>
-        <input id="transportKm" type="number" inputmode="decimal" min="0" step="0.1" placeholder="12"/>
-        <label for="transportTrips">Trips per week</label>
-        <input id="transportTrips" type="number" inputmode="numeric" min="0" step="1" value="10"/>
-        <div class="muted" style="font-size:12px">Uses approximate emission factors.</div>
+        <label>Distance per trip (km)</label>
+        <input type="number" id="transportKm" placeholder="e.g. 12">
+        <label>Trips per week</label>
+        <input type="number" id="transportTrips" value="10">
       </div>
-
       <div class="card">
-        <label for="electricityKwh">Electricity — monthly kWh</label>
-        <input id="electricityKwh" type="number" inputmode="numeric" min="0" step="1" placeholder="200"/>
-        <label for="cookingFuel">Cooking fuel</label>
-        <select id="cookingFuel"><option value="lpg">LPG</option><option value="electric">Electric</option><option value="biogas">Biogas</option><option value="wood">Wood / Biomass</option></select>
-        <label for="acHours">AC usage (hours/day)</label>
-        <input id="acHours" type="number" inputmode="decimal" min="0" step="0.1" value="0"/>
+        <label>Electricity (kWh/month)</label>
+        <input type="number" id="electricityKwh" placeholder="200">
+        <label>Cooking fuel</label>
+        <select id="cookingFuel">
+          <option value="lpg">LPG</option>
+          <option value="electric">Electric</option>
+          <option value="biogas">Biogas</option>
+          <option value="wood">Wood</option>
+        </select>
+        <label>AC usage (hours/day)</label>
+        <input type="number" id="acHours" value="0">
       </div>
-
       <div class="card">
-        <label for="dietType">Food — diet type</label>
-        <select id="dietType"><option value="omnivore">Omnivore</option><option value="pescatarian">Pescatarian</option><option value="vegetarian">Vegetarian</option><option value="vegan">Vegan</option></select>
-        <label for="mealsPerDay">Meals per day</label>
-        <input id="mealsPerDay" type="number" inputmode="numeric" min="1" step="1" value="3"/>
-        <div class="muted" style="font-size:12px">Estimates use diet averages.</div>
+        <label>Diet type</label>
+        <select id="dietType">
+          <option value="omnivore">Omnivore</option>
+          <option value="pescatarian">Pescatarian</option>
+          <option value="vegetarian">Vegetarian</option>
+          <option value="vegan">Vegan</option>
+        </select>
+        <label>Meals/day</label>
+        <input type="number" id="mealsPerDay" value="3">
       </div>
-
       <div class="card">
-        <label for="waterLitres">Water usage — litres/day</label>
-        <input id="waterLitres" type="number" inputmode="numeric" min="0" step="1" placeholder="150"/>
-        <label for="wasteReduce">Waste reduction</label>
-        <select id="wasteReduce"><option value="none">None</option><option value="some">Some</option><option value="good">Good</option><option value="excellent">Excellent</option></select>
+        <label>Water use (litres/day)</label>
+        <input type="number" id="waterLitres" placeholder="150">
+        <label>Waste reduction</label>
+        <select id="wasteReduce">
+          <option value="none">None</option>
+          <option value="some">Some</option>
+          <option value="good">Good</option>
+          <option value="excellent">Excellent</option>
+        </select>
       </div>
     </div>
 
-    <div class="row" style="gap:10px;margin-top:10px;align-items:center">
-      <button class="btn btn-primary" id="calculateBtn">Calculate</button>
-      <button class="btn btn-ghost" id="resetBtn">Reset</button>
-      <button class="btn btn-ghost" id="saveSnapshot">Save Snapshot</button>
-      <div style="margin-left:auto;text-align:right"><div class="muted" style="font-size:12px">Last saved: <span id="lastSaved">—</span></div></div>
+    <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="primary" id="calculateBtn">Calculate</button>
+      <button class="ghost" id="resetBtn">Reset</button>
+      <div class="score" id="greenScore"><span>🌱</span> <span id="greenScoreText">Score 0</span></div>
     </div>
 
-    <div class="results" id="resultsArea" aria-live="polite">
-      <div class="row">
-        <div style="flex:1">
-          <div class="big" id="co2Total">0 kg CO₂ / month</div>
-          <div class="muted" id="breakdownText" style="font-size:13px">Breakdown: Transport 0kg • Electricity 0kg • Food 0kg • Others 0kg</div>
-        </div>
-        <div style="width:220px;text-align:right">
-          <div class="muted" style="font-size:12px">Status</div>
-          <div id="statusBadge" style="margin-top:6px;font-weight:800">—</div>
-          <div class="muted" style="margin-top:6px;font-size:12px">Compare with:</div>
-          <div class="row" style="justify-content:flex-end">
-            <div class="muted" style="font-size:13px">India avg: <strong id="indiaAvg">600 kg</strong></div>
-            <div style="width:6px"></div>
-            <div class="muted" style="font-size:13px">World avg: <strong id="worldAvg">2000 kg</strong></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="row" style="flex-wrap:wrap;margin-top:6px;gap:10px">
-        <div class="tip" id="topTip">Top tip will appear here.</div>
-        <div class="tip" id="secondTip">Second tip will appear here.</div>
-        <div class="tip" id="thirdTip">Third tip will appear here.</div>
-      </div>
-
-      <div class="controls">
-        <button class="btn btn-primary" id="applyTip">Apply tip estimate</button>
-        <button class="btn btn-ghost" id="shareBtn">Copy result</button>
-        <div class="muted" id="savedMsg" style="font-size:12px"></div>
+    <div class="results" id="results">
+      <div class="big-num" id="co2Total">0 kg CO₂/month</div>
+      <div class="sub" id="breakdown">Breakdown</div>
+      <div style="margin-top:10px;display:grid;gap:8px">
+        <div class="tip" id="tip1"></div>
+        <div class="tip" id="tip2"></div>
+        <div class="tip" id="tip3"></div>
       </div>
     </div>
   </section>
 
-  <aside class="side">
-    <div class="visual panel" aria-hidden="false">
-      <div class="status"><div class="dot" id="statusDot" style="background:var(--edge)"></div><div id="statusLabel" style="font-weight:700">On Edge</div></div>
-      <div class="tree" aria-hidden="true">
-        <div class="leaves" id="leaves"></div>
-        <div class="trunk"></div>
-      </div>
-      <div class="balloon" id="balloon">0 kg</div>
-      <div class="ground"></div>
-    </div>
-
-    <div class="card">
-      <div class="row" style="justify-content:space-between">
-        <div><div class="muted" style="font-size:12px">EcoBuddy — your guide</div><div style="font-weight:800;margin-top:6px">Hello! I'm EcoBuddy 👋</div></div>
-        <div class="muted" style="font-size:12px">v1.1</div>
-      </div>
-      <div class="muted" id="ecoBuddyText" style="margin-top:10px;font-size:13px">Tell me your transport and home habits, then press <strong>Calculate</strong>. I'll give clear steps and estimated CO₂ saved.</div>
-    </div>
-
-    <div class="card" style="display:flex;flex-direction:column;gap:8px">
-      <div class="muted" style="font-size:12px">Snapshots</div>
-      <div id="snapshotsList" style="display:flex;flex-direction:column;gap:6px"></div>
-      <div class="row" style="gap:8px;margin-top:6px;align-items:center"><button class="btn btn-ghost" id="clearSnapshots">Clear Snapshots</button><div class="muted" style="margin-left:auto;font-size:12px">Stored locally</div></div>
-    </div>
+  <aside class="panel visual">
+    <div id="status">Status: —</div>
+    <div class="balloon" id="balloon">0 kg</div>
   </aside>
 </main>
-
 <script>
-const F={transport:{car:.192,motorbike:.09,bus:.05,train:.041,cycling:0,flight:.255},electricityGrid:.82,acPerHour:.9,cooking:{lpg:.185,electric:.82,biogas:.04,wood:.5},foodDiet:{omnivore:2.5,pescatarian:1.8,vegetarian:1.2,vegan:.9},waterLitreFactor:.0003,wasteReduce:{none:1,some:.92,good:.8,excellent:.6}};
-const INDIA=600,WORLD=2000;
-const $=id=>document.getElementById(id);
-const el={transportType:$('transportType'),transportKm:$('transportKm'),transportTrips:$('transportTrips'),electricityKwh:$('electricityKwh'),cookingFuel:$('cookingFuel'),acHours:$('acHours'),dietType:$('dietType'),mealsPerDay:$('mealsPerDay'),waterLitres:$('waterLitres'),wasteReduce:$('wasteReduce'),calculateBtn:$('calculateBtn'),resetBtn:$('resetBtn'),resultsArea:$('resultsArea'),co2Total:$('co2Total'),breakdownText:$('breakdownText'),statusBadge:$('statusBadge'),statusDot:$('statusDot'),statusLabel:$('statusLabel'),leaves:$('leaves'),balloon:$('balloon'),topTip:$('topTip'),secondTip:$('secondTip'),thirdTip:$('thirdTip'),applyTip:$('applyTip'),shareBtn:$('shareBtn'),savedMsg:$('savedMsg'),saveSnapshot:$('saveSnapshot'),snapshotsList:$('snapshotsList'),clearSnapshots:$('clearSnapshots'),lastSaved:$('lastSaved'),greenScoreText:$('greenScoreText'),scoreStars:$('scoreStars'),ecoBuddyText:$('ecoBuddyText'),indiaAvg:$('indiaAvg'),worldAvg:$('worldAvg')};
-el.indiaAvg.textContent=INDIA+' kg';el.worldAvg.textContent=WORLD+' kg';
-const fmt=n=>`${Math.round(n)} kg CO₂ / month`;const now=()=>new Date().toLocaleString();
-function compute(i){const wk=(i.transportKm||0)*(i.transportTrips||0);const mk=wk*52/12;const t=(F.transport[i.transportType]||0)*mk;const e=(i.electricityKwh||0)*F.electricityGrid;const ac=(i.acHours||0)*30*F.acPerHour;const cook=(F.cooking[i.cookingFuel]||0)*30;const fd=(F.foodDiet[i.dietType]||1.5)*(i.mealsPerDay||3)/3;const food=fd*30;const w=(i.waterLitres||0)*30*F.waterLitreFactor;const m=F.wasteReduce[i.wasteReduce]||1;const subtotal=(t+e+ac+cook+food+w)*m;return{t,e,ac,cook,food,w,subtotal}}
-function status(n){if(n<=250)return{label:'Safe',color:'var(--safe)',t:'#062a20'};if(n<=800)return{label:'On Edge',color:'var(--edge)',t:'#2d2104'};return{label:'High',color:'var(--danger)',t:'#2a0606'}}
-function score(n){if(n<=200)return 5;if(n<=400)return 4;if(n<=800)return 3;if(n<=1400)return 2;return 1}
-function visuals(n){const s=Math.max(.45,Math.min(1.15,1.25-(n/2000)));el.leaves.style.transform=`translateX(-50%) scale(${s})`;const k=Math.round(n);el.balloon.textContent=`${k} kg`;const b=Math.max(64,Math.min(150,150*(n/2000)));el.balloon.style.width=b+'px';el.balloon.style.height=Math.max(80,b*1.2)+'px'}
-function tips(em){const arr=[{k:'Transport',v:em.t,id:'transport'},{k:'Electricity',v:em.e,id:'electricity'},{k:'Food',v:em.food,id:'food'},{k:'AC',v:em.ac,id:'ac'},{k:'Water',v:em.w,id:'water'}].sort((a,b)=>b.v-a.v);const t=[];arr.forEach((c,i)=>{if(i===0){if(c.id==='transport'){const sv=Math.round(c.v*.4);t.push({title:'Reduce transport emissions',text:`Carpool, swap 2 weekly trips to bus/train, bike short runs. ~${sv} kg/month.`,estimate:sv})}else if(c.id==='electricity'){const sv=Math.round(c.v*.25);t.push({title:'Cut electricity use',text:`LEDs + kill standby + reduce AC 1h/day. ~${sv} kg/month.`,estimate:sv})}else if(c.id==='food'){const sv=Math.round(c.v*.3);t.push({title:'Shift diet a bit',text:`3 plant‑forward meals/week. ~${sv} kg/month.`,estimate:sv})}else{const sv=Math.round(c.v*.2);t.push({title:'Small changes, big impact',text:`Tweak AC/water/waste. ~${sv} kg/month.`,estimate:sv})}}else{const sv=Math.max(5,Math.round(c.v*.15));t.push({title:`Reduce ${c.k}`,text:`Target ${c.k.toLowerCase()} with small habits. ~${sv} kg/month.`,estimate:sv})}});while(t.length<3)t.push({title:'Plant/offset locally',text:'Support high‑integrity projects.',estimate:10});return t.slice(0,3)}
-function read(){return{transportType:el.transportType.value,transportKm:+el.transportKm.value||0,transportTrips:+el.transportTrips.value||0,electricityKwh:+el.electricityKwh.value||0,cookingFuel:el.cookingFuel.value,acHours:+el.acHours.value||0,dietType:el.dietType.value,mealsPerDay:+el.mealsPerDay.value||3,waterLitres:+el.waterLitres.value||0,wasteReduce:el.wasteReduce.value}}
-function render(i){const em=compute(i),m=em.subtotal;el.resultsArea.style.display='flex';el.co2Total.textContent=fmt(m);el.breakdownText.textContent=`Breakdown: Transport ${Math.round(em.t)}kg • Electricity ${Math.round(em.e)}kg • Food ${Math.round(em.food)}kg • Others ${Math.round(em.ac+em.cook+em.w)}kg`;const s=status(m);el.statusBadge.textContent=s.label;el.statusBadge.style.color=s.t;el.statusDot.style.background=s.color;el.statusLabel.textContent=s.label;visuals(m);const tp=tips(em);el.topTip.innerHTML=`<strong>${tp[0].title}</strong><div class="muted" style="margin-top:6px">${tp[0].text}</div>`;el.secondTip.innerHTML=`<strong>${tp[1].title}</strong><div class="muted" style="margin-top:6px">${tp[1].text}</div>`;el.thirdTip.innerHTML=`<strong>${tp[2].title}</strong><div class="muted" style="margin-top:6px">${tp[2].text}</div>`;const sc=score(m);el.greenScoreText.textContent=`Score ${sc}`;el.scoreStars.textContent='🌱'.repeat(sc);el.ecoBuddyText.textContent=`Your monthly estimate is ${Math.round(m)} kg CO₂. Top action: ${tp[0].title}. Use "Apply tip estimate" to simulate.`;localStorage.setItem('cfk_last_inputs',JSON.stringify({inputs:i,result:em,timestamp:new Date().toISOString()}));el.lastSaved.textContent=now();el.savedMsg.textContent=''}
-el.calculateBtn.addEventListener('click',()=>render(read()));
-el.resetBtn.addEventListener('click',()=>{document.querySelectorAll('input[type=number]').forEach(i=>i.value='');el.transportType.value='car';el.cookingFuel.value='lpg';el.dietType.value='omnivore';el.transportTrips.value='10';el.acHours.value='0';el.wasteReduce.value='none';el.resultsArea.style.display='none';el.savedMsg.textContent=''},{passive:true});
-el.applyTip.addEventListener('click',()=>{const last=JSON.parse(localStorage.getItem('cfk_last_inputs')||'null');if(!last){alert('Calculate first.');return}const i=last.inputs||read();const em=compute(i);const tp=tips(em);const nm=Math.max(0,Math.round(em.subtotal-tp[0].estimate));el.co2Total.textContent=`${nm} kg CO₂ / month (after tip)`;el.ecoBuddyText.textContent=`If you follow: ${tp[0].title} → save ~${tp[0].estimate} kg/month.`;visuals(nm)});
-el.shareBtn.addEventListener('click',async()=>{const txt=`${el.co2Total.textContent} • ${el.breakdownText.textContent} • ${el.statusBadge.textContent} • ${el.greenScoreText.textContent}`;try{await navigator.clipboard.writeText(txt);el.savedMsg.textContent='Copied ✅';setTimeout(()=>el.savedMsg.textContent='',2000)}catch{alert('Copy failed. Select text and copy.') }});
-function loadSnaps(){const arr=JSON.parse(localStorage.getItem('cfk_snaps')||'[]');el.snapshotsList.innerHTML='';arr.slice().reverse().forEach(s=>{const d=document.createElement('div');d.className='snap-row';d.innerHTML=`<div style="font-size:13px"><strong>${s.title||'Snapshot'}</strong><div class="muted" style="font-size:12px">${s.when}</div></div><div class="row"><button class="btn btn-ghost" data-id="${s.id}">Load</button><button class="btn btn-ghost" data-del="${s.id}">Delete</button></div>`;el.snapshotsList.appendChild(d)});el.snapshotsList.querySelectorAll('button[data-id]').forEach(b=>b.addEventListener('click',()=>useSnap(b.getAttribute('data-id'))));el.snapshotsList.querySelectorAll('button[data-del]').forEach(b=>b.addEventListener('click',()=>delSnap(b.getAttribute('data-del'))))}
-function saveSnap(){const i=read(),em=compute(i),arr=JSON.parse(localStorage.getItem('cfk_snaps')||'[]');arr.push({id:'s_'+Date.now(),when:new Date().toLocaleString(),inputs:i,result:em});localStorage.setItem('cfk_snaps',JSON.stringify(arr));loadSnaps();el.lastSaved.textContent=now();el.savedMsg.textContent='Snapshot saved ✅';setTimeout(()=>el.savedMsg.textContent='',1800)}
-function useSnap(id){const arr=JSON.parse(localStorage.getItem('cfk_snaps')||'[]');const s=arr.find(x=>x.id===id);if(!s)return;const i=s.inputs;el.transportType.value=i.transportType;el.transportKm.value=i.transportKm||'';el.transportTrips.value=i.transportTrips||0;el.electricityKwh.value=i.electricityKwh||'';el.cookingFuel.value=i.cookingFuel||'lpg';el.acHours.value=i.acHours||0;el.dietType.value=i.dietType||'omnivore';el.mealsPerDay.value=i.mealsPerDay||3;el.waterLitres.value=i.waterLitres||'';el.wasteReduce.value=i.wasteReduce||'none';render(i);el.savedMsg.textContent='Snapshot loaded';setTimeout(()=>el.savedMsg.textContent='',1400)}
-function delSnap(id){let arr=JSON.parse(localStorage.getItem('cfk_snaps')||'[]');arr=arr.filter(x=>x.id!==id);localStorage.setItem('cfk_snaps',JSON.stringify(arr));loadSnaps();el.savedMsg.textContent='Snapshot deleted';setTimeout(()=>el.savedMsg.textContent='',1200)}
-el.saveSnapshot.addEventListener('click',saveSnap);
-el.clearSnapshots.addEventListener('click',()=>{localStorage.removeItem('cfk_snaps');loadSnaps()});
-(function init(){const last=JSON.parse(localStorage.getItem('cfk_last_inputs')||'null');if(last&&last.inputs){const i=last.inputs;el.transportType.value=i.transportType||'car';el.transportKm.value=i.transportKm||'';el.transportTrips.value=i.transportTrips||10;el.electricityKwh.value=i.electricityKwh||'';el.cookingFuel.value=i.cookingFuel||'lpg';el.acHours.value=i.acHours||0;el.dietType.value=i.dietType||'omnivore';el.mealsPerDay.value=i.mealsPerDay||3;el.waterLitres.value=i.waterLitres||'';el.wasteReduce.value=i.wasteReduce||'none';el.lastSaved.textContent=new Date(last.timestamp).toLocaleString()}loadSnaps()})();
+const FACTORS={transport:{car:0.192,motorbike:0.09,bus:0.05,train:0.041,cycling:0,flight:0.255},electricity:0.82,ac:0.9,cooking:{lpg:0.185,electric:0.82,biogas:0.04,wood:0.5},diet:{omnivore:2.5,pescatarian:1.8,vegetarian:1.2,vegan:0.9},water:0.0003,waste:{none:1,some:0.92,good:0.8,excellent:0.6}};
+const transportType=document.getElementById("transportType"),transportKm=document.getElementById("transportKm"),transportTrips=document.getElementById("transportTrips"),electricityKwh=document.getElementById("electricityKwh"),cookingFuel=document.getElementById("cookingFuel"),acHours=document.getElementById("acHours"),dietType=document.getElementById("dietType"),mealsPerDay=document.getElementById("mealsPerDay"),waterLitres=document.getElementById("waterLitres"),wasteReduce=document.getElementById("wasteReduce"),calculateBtn=document.getElementById("calculateBtn"),resetBtn=document.getElementById("resetBtn"),results=document.getElementById("results"),co2Total=document.getElementById("co2Total"),breakdown=document.getElementById("breakdown"),tip1=document.getElementById("tip1"),tip2=document.getElementById("tip2"),tip3=document.getElementById("tip3"),balloon=document.getElementById("balloon"),greenScoreText=document.getElementById("greenScoreText"),status=document.getElementById("status");
+function calc(){const km=(+transportKm.value||0)*(+transportTrips.value||0)*52/12;const transport=km*(FACTORS.transport[transportType.value]||0);const electr=(+electricityKwh.value||0)*FACTORS.electricity;const ac=(+acHours.value||0)*30*FACTORS.ac;const cooking=(FACTORS.cooking[cookingFuel.value]||0)*30;const food=(FACTORS.diet[dietType.value]||1.5)*30;const water=(+waterLitres.value||0)*30*FACTORS.water;let total=(transport+electr+ac+cooking+food+water)*(FACTORS.waste[wasteReduce.value]||1);show(total,{transport,electr,ac,cooking,food,water});}
+function show(total,em){results.style.display="block";co2Total.textContent=`${Math.round(total)} kg CO₂/month`;breakdown.textContent=`Transport ${Math.round(em.transport)}kg, Electric ${Math.round(em.electr)}kg, Food ${Math.round(em.food)}kg`;balloon.textContent=`${Math.round(total)} kg`;status.textContent=total<500?"Status: ✅ Low":"Status: ⚠️ High";let score=total<400?5:total<700?4:total<1000?3:2;greenScoreText.textContent="Score "+score;const tips=["Try carpooling or public transport","Save energy: LED, unplug devices","Shift diet to more veggies"];
+tip1.textContent=tips[0];tip2.textContent=tips[1];tip3.textContent=tips[2];}
+calculateBtn.onclick=calc;resetBtn.onclick=()=>{document.querySelectorAll("input").forEach(i=>i.value="");transportType.value="car";cookingFuel.value="lpg";dietType.value="omnivore";wasteReduce.value="none";results.style.display="none"};
 </script>
 </body>
 </html>
