@@ -2,780 +2,193 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#0b1220" />
 <title>Carbon Footprint Knower</title>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#0f1724; /* deep navy */
-    --card:#0f1724;
-    --muted:#9aa8c0;
-    --glass: rgba(255,255,255,0.04);
-    --safe:#2dd4bf;
-    --edge:#f59e0b;
-    --danger:#ef4444;
-    --accent:#60a5fa;
-    --glass-2: rgba(255,255,255,0.02);
-    --glass-3: rgba(255,255,255,0.06);
-    color-scheme: dark;
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0;
-    font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
-    background: linear-gradient(180deg,#031021 0%, #071226 50%, #081022 100%);
-    color:#e6eef8;
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    padding:28px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:20px;
-  }
-
-  .app {
-    width:100%;
-    max-width:1100px;
-    display:grid;
-    grid-template-columns: 1fr 420px;
-    gap:20px;
-  }
-
-  /* LEFT - interactive calculator + results */
-  .panel {
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.015));
-    border-radius:16px;
-    padding:20px;
-    box-shadow: 0 6px 30px rgba(2,6,23,0.6);
-    border: 1px solid rgba(255,255,255,0.03);
-  }
-
-  header.app-head{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    margin-bottom:12px;
-  }
-  header.app-head h1{
-    font-family:"Space Grotesk", "Inter";
-    margin:0;
-    font-weight:600;
-    letter-spacing:0.2px;
-    font-size:20px;
-  }
-  header.app-head p{margin:0;color:var(--muted);font-size:13px}
-
-  .row {display:flex; gap:12px; align-items:center;}
-  label.small{font-size:13px;color:var(--muted);display:block;margin-bottom:6px}
-  .form-grid{
-    display:grid;
-    grid-template-columns: repeat(2,1fr);
-    gap:12px;
-    margin-top:12px;
-  }
-
-  .card{
-    background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
-    padding:12px;
-    border-radius:12px;
-    border: 1px solid rgba(255,255,255,0.02);
-  }
-  input[type="number"], select, input[type="range"]{
-    width:100%;
-    padding:8px 10px;
-    border-radius:8px;
-    border:1px solid rgba(255,255,255,0.04);
-    background:transparent;
-    color:inherit;
-  }
-  .hint{font-size:12px;color:var(--muted);margin-top:6px}
-  .range-row{display:flex;gap:8px;align-items:center}
-
-  button.primary{
-    background: linear-gradient(90deg,var(--accent), #7dd3fc 120%);
-    border:none;
-    color:#031021;
-    padding:12px 14px;
-    border-radius:12px;
-    font-weight:700;
-    cursor:pointer;
-    box-shadow: 0 6px 18px rgba(60,130,200,0.12);
-  }
-  button.ghost{
-    background:transparent;border:1px solid rgba(255,255,255,0.04);
-    padding:9px 12px;border-radius:10px;color:var(--muted);cursor:pointer;
-  }
-
-  /* Right column - visual & profile */
-  .side {
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-  }
-  .visual {
-    height:360px;
-    border-radius:14px;
-    padding:14px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border:1px solid rgba(255,255,255,0.03);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    gap:10px;
-    position:relative;
-    overflow:hidden;
-  }
-  .visual .status{
-    position:absolute;
-    left:14px; top:14px;
-    display:flex; gap:8px; align-items:center;
-  }
-  .dot{width:12px;height:12px;border-radius:50%}
-  .status-text{font-weight:600}
-  .tree{
-    width:220px;height:220px; position:relative;
-  }
-  .tree .trunk{
-    position:absolute; bottom:0; left:50%; transform:translateX(-50%);
-    width:36px; height:90px; background:linear-gradient(#3c2b18,#6a3f22); border-radius:12px;
-    box-shadow: inset 0 -6px 12px rgba(0,0,0,0.4);
-  }
-  .tree .leaves{
-    position:absolute; left:50%; transform:translateX(-50%);
-    bottom:70px; width:180px; height:160px; background: radial-gradient(circle at 30% 30%, rgba(110,200,140,0.95), rgba(40,120,80,0.95));
-    border-radius:50%;
-    box-shadow: 0 20px 60px rgba(20,60,40,0.55);
-    transform-origin:50% 100%;
-  }
-
-  .balloon{
-    position:absolute; right:20px; bottom:30px;
-    width:90px;height:120px;border-radius:50%;
-    background: linear-gradient(#e6edf8,#c6d7f4);
-    display:flex; align-items:center; justify-content:center; font-weight:700; color:#07263f;
-    box-shadow: 0 20px 40px rgba(2,10,30,0.6);
-  }
-  .ground{
-    position:absolute; left:0; right:0; bottom:0; height:32px; background: linear-gradient(#05202e,#082432);
-    box-shadow: inset 0 6px 30px rgba(0,0,0,0.6);
-  }
-
-  /* Results area */
-  .results{
-    display:flex; flex-direction:column; gap:8px; margin-top:12px;
-  }
-  .big-num{
-    font-size:28px; font-weight:700;
-  }
-  .sub{color:var(--muted);font-size:13px}
-  .tips{display:flex;flex-direction:column;gap:8px;margin-top:6px}
-  .tip{background:var(--glass-3);padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.02)}
-  .compare{display:flex;gap:8px;align-items:center}
-
-  /* footer controls */
-  .controls{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-  .save-tag{font-size:12px;color:var(--muted);}
-
-  /* Score badge */
-  .score{
-    display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;background:linear-gradient(90deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));
-    border:1px solid rgba(255,255,255,0.02);
-  }
-
-  /* responsive */
-  @media(max-width:980px){
-    .app{grid-template-columns: 1fr; padding:0}
-    .visual{height:280px}
-  }
+:root{--bg:#0b1220;--fg:#e8eef7;--muted:#9fb0c9;--card:#10192b;--line:rgba(255,255,255,.06);--glass:rgba(255,255,255,.03);--safe:#10b981;--edge:#f59e0b;--danger:#ef4444;--accent:#60a5fa;color-scheme:dark}
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,#071224,#09172e);color:var(--fg);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;padding:16px;display:flex;align-items:center;justify-content:center}
+.app{width:100%;max-width:1080px;display:grid;grid-template-columns:1fr 400px;gap:14px}
+.panel{background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.015));border:1px solid var(--line);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.35);padding:14px}
+.app-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.h1{margin:0;font-weight:700;letter-spacing:.2px;font-size:18px}
+.muted{color:var(--muted)}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:8px}
+.card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));padding:10px;border-radius:12px;border:1px solid var(--line)}
+label{font-size:12px;color:var(--muted);display:block;margin:6px 0 6px}
+input[type=number],select{width:100%;padding:10px 10px;border-radius:10px;border:1px solid var(--line);background:transparent;color:inherit;appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{margin:0;-webkit-appearance:none}
+.row{display:flex;gap:8px;align-items:center}
+.btn{border:0;border-radius:12px;padding:10px 12px;cursor:pointer}
+.btn-primary{background:linear-gradient(90deg,var(--accent),#8ecbff);color:#04121f;font-weight:800;box-shadow:0 8px 20px rgba(64,145,230,.18)}
+.btn-ghost{background:transparent;border:1px solid var(--line);color:var(--fg)}
+.results{display:none;flex-direction:column;gap:8px;margin-top:8px}
+.big{font-size:26px;font-weight:800}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:10px;background:var(--glass);border:1px solid var(--line)}
+.side{display:flex;flex-direction:column;gap:10px}
+.visual{height:320px;border-radius:14px;padding:12px;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;position:relative;overflow:hidden}
+.status{position:absolute;left:12px;top:12px;display:flex;gap:8px;align-items:center}
+.dot{width:10px;height:10px;border-radius:50%}
+.tree{width:200px;height:200px;position:relative}
+.trunk{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:34px;height:80px;background:linear-gradient(#3a2a18,#694023);border-radius:12px;box-shadow:inset 0 -6px 12px rgba(0,0,0,.4)}
+.leaves{position:absolute;left:50%;bottom:66px;transform:translateX(-50%) scale(.6);width:160px;height:145px;background:radial-gradient(40% 40% at 30% 30%,rgba(110,200,140,.95),rgba(40,120,80,.95));border-radius:50%;box-shadow:0 16px 55px rgba(20,60,40,.55);transform-origin:50% 100%}
+.balloon{position:absolute;right:16px;bottom:24px;width:80px;height:100px;border-radius:50%;background:linear-gradient(#e6edf8,#c6d7f4);display:flex;align-items:center;justify-content:center;font-weight:800;color:#07263f;box-shadow:0 18px 36px rgba(2,10,30,.6)}
+.ground{position:absolute;left:0;right:0;bottom:0;height:28px;background:linear-gradient(#06202d,#072432);box-shadow:inset 0 6px 30px rgba(0,0,0,.6)}
+.tip{background:var(--glass);padding:10px;border-radius:10px;border:1px solid var(--line)}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.snap-row{display:flex;justify-content:space-between;align-items:center;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,.02)}
+@media (max-width:960px){body{padding:12px}.app{grid-template-columns:1fr}.visual{height:260px}}
+@media (prefers-reduced-motion:reduce){*{animation:none;transition:none}}
 </style>
 </head>
 <body>
-  <main class="app" role="main" aria-labelledby="app-title">
-    <section class="panel" aria-labelledby="app-title">
-      <header class="app-head">
-        <div>
-          <h1 id="app-title">Carbon Footprint Knower</h1>
-          <p>Quick — Interactive — Actionable</p>
-        </div>
-        <div style="text-align:right">
-          <div class="score" id="greenScoreBadge" title="Your Green Score">
-            <span id="scoreStars">🌱🌱🌱</span>
-            <strong id="greenScoreText">Score 0</strong>
-          </div>
-          <div style="margin-top:6px;font-size:12px;color:var(--muted)">Saved locally in browser</div>
-        </div>
-      </header>
-
-      <div class="form-grid">
-        <!-- Transport -->
-        <div class="card">
-          <label class="small">Transport — Primary commute</label>
-          <select id="transportType" aria-label="Transport type">
-            <option value="car">Car (petrol/diesel)</option>
-            <option value="motorbike">Motorbike / Scooter</option>
-            <option value="bus">Bus</option>
-            <option value="train">Train</option>
-            <option value="cycling">Bicycle / Walking</option>
-            <option value="flight">Flights (domestic)</option>
-          </select>
-          <label class="small" style="margin-top:10px">Avg distance per trip (km)</label>
-          <input type="number" id="transportKm" min="0" step="0.1" placeholder="e.g., 12" />
-          <label class="small" style="margin-top:10px">Trips per week</label>
-          <input type="number" id="transportTrips" min="0" step="1" value="10" />
-          <div class="hint">We use emission factors (approx) to estimate CO₂e. Values are editable later.</div>
-        </div>
-
-        <!-- Home energy -->
-        <div class="card">
-          <label class="small">Electricity — Avg monthly kWh</label>
-          <input type="number" id="electricityKwh" min="0" step="1" placeholder="e.g., 200" />
-          <label class="small" style="margin-top:10px">Cooking fuel</label>
-          <select id="cookingFuel">
-            <option value="lpg">LPG</option>
-            <option value="electric">Electric</option>
-            <option value="biogas">Biogas</option>
-            <option value="wood">Wood / Biomass</option>
-          </select>
-          <label class="small" style="margin-top:10px">AC usage (hours/day)</label>
-          <input type="number" id="acHours" min="0" step="0.1" value="0" />
-        </div>
-
-        <!-- Food -->
-        <div class="card">
-          <label class="small">Food — Diet type</label>
-          <select id="dietType">
-            <option value="omnivore">Omnivore (meat + dairy)</option>
-            <option value="pescatarian">Pescatarian</option>
-            <option value="vegetarian">Vegetarian</option>
-            <option value="vegan">Vegan</option>
-          </select>
-          <label class="small" style="margin-top:10px">Meals per day</label>
-          <input type="number" id="mealsPerDay" min="1" step="1" value="3" />
-          <div class="hint">Food emissions estimate uses average per-diet factors.</div>
-        </div>
-
-        <!-- Water & waste -->
-        <div class="card">
-          <label class="small">Water usage — litres/day</label>
-          <input type="number" id="waterLitres" min="0" step="1" placeholder="e.g., 150" />
-          <label class="small" style="margin-top:10px">Waste reduction (recycling)</label>
-          <select id="wasteReduce">
-            <option value="none">None</option>
-            <option value="some">Some (recycle occasionally)</option>
-            <option value="good">Good (regular recycling)</option>
-            <option value="excellent">Excellent (compost + recycle)</option>
-          </select>
-        </div>
+<main class="app" role="main" aria-labelledby="app-title">
+  <section class="panel" aria-labelledby="app-title">
+    <div class="app-head">
+      <div>
+        <h1 id="app-title" class="h1">Carbon Footprint Knower</h1>
+        <p class="muted">Quick · Interactive · Actionable</p>
       </div>
-
-      <div style="display:flex;gap:10px;margin-top:14px;align-items:center">
-        <button class="primary" id="calculateBtn">Calculate My Footprint</button>
-        <button class="ghost" id="resetBtn">Reset Inputs</button>
-        <button class="ghost" id="saveSnapshot">Save Snapshot</button>
-        <div style="margin-left:auto;text-align:right">
-          <div class="sub">Last saved: <span id="lastSaved">—</span></div>
-        </div>
+      <div style="text-align:right">
+        <div class="badge" id="greenScoreBadge" title="Your Green Score"><span id="scoreStars" aria-hidden="true">🌱🌱🌱</span><strong id="greenScoreText">Score 0</strong></div>
+        <div class="muted" style="margin-top:4px;font-size:12px">Saved locally</div>
       </div>
+    </div>
 
-      <div class="results" id="resultsArea" aria-live="polite" style="display:none">
-        <div class="row">
-          <div style="flex:1">
-            <div class="big-num" id="co2Total">0 kg CO₂ / month</div>
-            <div class="sub" id="breakdownText">Breakdown: Transport 0kg • Electricity 0kg • Food 0kg • Others 0kg</div>
-          </div>
-          <div style="width:220px;text-align:right">
-            <div class="sub">Status</div>
-            <div id="statusBadge" style="margin-top:6px;font-weight:700">—</div>
-            <div class="sub" style="margin-top:6px">Compare with:</div>
-            <div class="compare" style="justify-content:flex-end">
-              <div class="sub">India avg: <strong id="indiaAvg">600 kg</strong></div>
-              <div style="width:8px"></div>
-              <div class="sub">World avg: <strong id="worldAvg">2000 kg</strong></div>
-            </div>
-          </div>
-        </div>
-
-        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px">
-          <div class="tip" id="topTip">Top tip will appear here.</div>
-          <div class="tip" id="secondTip">Second tip will appear here.</div>
-          <div class="tip" id="thirdTip">Third tip will appear here.</div>
-        </div>
-
-        <div style="display:flex;gap:8px;align-items:center; margin-top:8px; flex-wrap:wrap">
-          <button class="primary" id="applyTip">Apply tip estimate</button>
-          <button class="ghost" id="shareBtn">Copy result</button>
-          <div class="save-tag" id="savedMsg"></div>
-        </div>
-      </div>
-
-    </section>
-
-    <!-- RIGHT SIDE VISUAL -->
-    <aside class="side">
-      <div class="visual panel" aria-hidden="false">
-        <div class="status">
-          <div class="dot" id="statusDot" style="background:var(--edge)"></div>
-          <div class="status-text" id="statusLabel">On Edge</div>
-        </div>
-
-        <div class="tree" aria-hidden="true">
-          <div class="leaves" id="leaves" style="transform:scale(0.6)"></div>
-          <div class="trunk"></div>
-        </div>
-
-        <div class="balloon" id="balloon">0 kg</div>
-        <div class="ground"></div>
+    <div class="form-grid">
+      <div class="card">
+        <label for="transportType">Transport — primary</label>
+        <select id="transportType" autocomplete="off">
+          <option value="car">Car (petrol/diesel)</option>
+          <option value="motorbike">Motorbike / Scooter</option>
+          <option value="bus">Bus</option>
+          <option value="train">Train</option>
+          <option value="cycling">Bicycle / Walking</option>
+          <option value="flight">Flights (domestic)</option>
+        </select>
+        <label for="transportKm">Avg distance per trip (km)</label>
+        <input id="transportKm" type="number" inputmode="decimal" min="0" step="0.1" placeholder="12"/>
+        <label for="transportTrips">Trips per week</label>
+        <input id="transportTrips" type="number" inputmode="numeric" min="0" step="1" value="10"/>
+        <div class="muted" style="font-size:12px">Uses approximate emission factors.</div>
       </div>
 
       <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <div>
-            <div class="sub">EcoBuddy — your guide</div>
-            <div style="font-weight:700;margin-top:6px">Hello! I'm EcoBuddy 👋</div>
+        <label for="electricityKwh">Electricity — monthly kWh</label>
+        <input id="electricityKwh" type="number" inputmode="numeric" min="0" step="1" placeholder="200"/>
+        <label for="cookingFuel">Cooking fuel</label>
+        <select id="cookingFuel"><option value="lpg">LPG</option><option value="electric">Electric</option><option value="biogas">Biogas</option><option value="wood">Wood / Biomass</option></select>
+        <label for="acHours">AC usage (hours/day)</label>
+        <input id="acHours" type="number" inputmode="decimal" min="0" step="0.1" value="0"/>
+      </div>
+
+      <div class="card">
+        <label for="dietType">Food — diet type</label>
+        <select id="dietType"><option value="omnivore">Omnivore</option><option value="pescatarian">Pescatarian</option><option value="vegetarian">Vegetarian</option><option value="vegan">Vegan</option></select>
+        <label for="mealsPerDay">Meals per day</label>
+        <input id="mealsPerDay" type="number" inputmode="numeric" min="1" step="1" value="3"/>
+        <div class="muted" style="font-size:12px">Estimates use diet averages.</div>
+      </div>
+
+      <div class="card">
+        <label for="waterLitres">Water usage — litres/day</label>
+        <input id="waterLitres" type="number" inputmode="numeric" min="0" step="1" placeholder="150"/>
+        <label for="wasteReduce">Waste reduction</label>
+        <select id="wasteReduce"><option value="none">None</option><option value="some">Some</option><option value="good">Good</option><option value="excellent">Excellent</option></select>
+      </div>
+    </div>
+
+    <div class="row" style="gap:10px;margin-top:10px;align-items:center">
+      <button class="btn btn-primary" id="calculateBtn">Calculate</button>
+      <button class="btn btn-ghost" id="resetBtn">Reset</button>
+      <button class="btn btn-ghost" id="saveSnapshot">Save Snapshot</button>
+      <div style="margin-left:auto;text-align:right"><div class="muted" style="font-size:12px">Last saved: <span id="lastSaved">—</span></div></div>
+    </div>
+
+    <div class="results" id="resultsArea" aria-live="polite">
+      <div class="row">
+        <div style="flex:1">
+          <div class="big" id="co2Total">0 kg CO₂ / month</div>
+          <div class="muted" id="breakdownText" style="font-size:13px">Breakdown: Transport 0kg • Electricity 0kg • Food 0kg • Others 0kg</div>
+        </div>
+        <div style="width:220px;text-align:right">
+          <div class="muted" style="font-size:12px">Status</div>
+          <div id="statusBadge" style="margin-top:6px;font-weight:800">—</div>
+          <div class="muted" style="margin-top:6px;font-size:12px">Compare with:</div>
+          <div class="row" style="justify-content:flex-end">
+            <div class="muted" style="font-size:13px">India avg: <strong id="indiaAvg">600 kg</strong></div>
+            <div style="width:6px"></div>
+            <div class="muted" style="font-size:13px">World avg: <strong id="worldAvg">2000 kg</strong></div>
           </div>
-          <div style="font-size:12px;color:var(--muted)">v1.0</div>
-        </div>
-
-        <div style="margin-top:12px;color:var(--muted);font-size:13px">
-          <div id="ecoBuddyText">Tell me your transport and home habits, then press <strong>Calculate</strong>. I'll give clear steps and estimated CO₂ saved.</div>
         </div>
       </div>
 
-      <div class="card" style="display:flex;flex-direction:column;gap:8px">
-        <div class="sub">Snapshots</div>
-        <div id="snapshotsList" style="display:flex;flex-direction:column;gap:6px"></div>
-        <div style="display:flex;gap:8px;margin-top:6px;align-items:center">
-          <button class="ghost" id="clearSnapshots">Clear Snapshots</button>
-          <div class="sub" style="margin-left:auto">Stored locally</div>
-        </div>
+      <div class="row" style="flex-wrap:wrap;margin-top:6px;gap:10px">
+        <div class="tip" id="topTip">Top tip will appear here.</div>
+        <div class="tip" id="secondTip">Second tip will appear here.</div>
+        <div class="tip" id="thirdTip">Third tip will appear here.</div>
       </div>
 
-    </aside>
-  </main>
+      <div class="controls">
+        <button class="btn btn-primary" id="applyTip">Apply tip estimate</button>
+        <button class="btn btn-ghost" id="shareBtn">Copy result</button>
+        <div class="muted" id="savedMsg" style="font-size:12px"></div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="side">
+    <div class="visual panel" aria-hidden="false">
+      <div class="status"><div class="dot" id="statusDot" style="background:var(--edge)"></div><div id="statusLabel" style="font-weight:700">On Edge</div></div>
+      <div class="tree" aria-hidden="true">
+        <div class="leaves" id="leaves"></div>
+        <div class="trunk"></div>
+      </div>
+      <div class="balloon" id="balloon">0 kg</div>
+      <div class="ground"></div>
+    </div>
+
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <div><div class="muted" style="font-size:12px">EcoBuddy — your guide</div><div style="font-weight:800;margin-top:6px">Hello! I'm EcoBuddy 👋</div></div>
+        <div class="muted" style="font-size:12px">v1.1</div>
+      </div>
+      <div class="muted" id="ecoBuddyText" style="margin-top:10px;font-size:13px">Tell me your transport and home habits, then press <strong>Calculate</strong>. I'll give clear steps and estimated CO₂ saved.</div>
+    </div>
+
+    <div class="card" style="display:flex;flex-direction:column;gap:8px">
+      <div class="muted" style="font-size:12px">Snapshots</div>
+      <div id="snapshotsList" style="display:flex;flex-direction:column;gap:6px"></div>
+      <div class="row" style="gap:8px;margin-top:6px;align-items:center"><button class="btn btn-ghost" id="clearSnapshots">Clear Snapshots</button><div class="muted" style="margin-left:auto;font-size:12px">Stored locally</div></div>
+    </div>
+  </aside>
+</main>
 
 <script>
-/*
- Carbon Footprint Knower - JS logic
- - Simple (but sensible) emission factors and calculations
- - Saves snapshots to localStorage
- - Animations and UI feedback
-*/
-
-// ---- Emission factors (approximate, per unit) ----
-// Notes: values are intentionally simplified for a demo. Replace with authoritative numbers if needed.
-const FACTORS = {
-  transport: {
-    car: 0.192,       // kg CO2 per km (average small car) 
-    motorbike: 0.09,  // kg CO2 per km
-    bus: 0.05,        // per passenger-km
-    train: 0.041,     // per passenger-km
-    cycling: 0.0,
-    flight: 0.255     // per passenger-km (short-haul avg)
-  },
-  electricityGrid: 0.82, // kg CO2 per kWh (example for India grid; modify if needed)
-  acPerHour: 0.9, // additional kgCO2 per hour of AC (depends on efficiency)
-  cooking: { lpg: 0.185, electric: 0.82, biogas: 0.04, wood: 0.5 }, // kg per cooking event (simplified)
-  foodDiet: { omnivore: 2.5, pescatarian: 1.8, vegetarian: 1.2, vegan: 0.9 }, // kg CO2 per day (avg)
-  waterLitreFactor: 0.0003, // kg per litre (treatment + heating) ~0.3g
-  wasteReduce: { none:1, some:0.92, good:0.8, excellent:0.6 } // multiplier
-};
-
-// Average comparisons (monthly kg)
-const INDIA_AVG_MONTHLY = 600; // placeholder
-const WORLD_AVG_MONTHLY = 2000; // placeholder
-
-// DOM
-const transportType = document.getElementById('transportType');
-const transportKm = document.getElementById('transportKm');
-const transportTrips = document.getElementById('transportTrips');
-const electricityKwh = document.getElementById('electricityKwh');
-const cookingFuel = document.getElementById('cookingFuel');
-const acHours = document.getElementById('acHours');
-const dietType = document.getElementById('dietType');
-const mealsPerDay = document.getElementById('mealsPerDay');
-const waterLitres = document.getElementById('waterLitres');
-const wasteReduce = document.getElementById('wasteReduce');
-
-const calculateBtn = document.getElementById('calculateBtn');
-const resetBtn = document.getElementById('resetBtn');
-const resultsArea = document.getElementById('resultsArea');
-const co2Total = document.getElementById('co2Total');
-const breakdownText = document.getElementById('breakdownText');
-const statusBadge = document.getElementById('statusBadge');
-const statusDot = document.getElementById('statusDot');
-const statusLabel = document.getElementById('statusLabel');
-const leaves = document.getElementById('leaves');
-const balloon = document.getElementById('balloon');
-const topTip = document.getElementById('topTip');
-const secondTip = document.getElementById('secondTip');
-const thirdTip = document.getElementById('thirdTip');
-const applyTip = document.getElementById('applyTip');
-const shareBtn = document.getElementById('shareBtn');
-const savedMsg = document.getElementById('savedMsg');
-const saveSnapshot = document.getElementById('saveSnapshot');
-const snapshotsList = document.getElementById('snapshotsList');
-const clearSnapshots = document.getElementById('clearSnapshots');
-const lastSaved = document.getElementById('lastSaved');
-const greenScoreText = document.getElementById('greenScoreText');
-const scoreStars = document.getElementById('scoreStars');
-const ecoBuddyText = document.getElementById('ecoBuddyText');
-const indiaAvg = document.getElementById('indiaAvg');
-const worldAvg = document.getElementById('worldAvg');
-
-indiaAvg.textContent = INDIA_AVG_MONTHLY + ' kg';
-worldAvg.textContent = WORLD_AVG_MONTHLY + ' kg';
-
-// ---- Helpers ----
-function formatKg(n){ return `${Math.round(n)} kg CO₂ / month`; }
-function nowISO(){ return new Date().toLocaleString(); }
-
-// compute monthly emissions
-function computeEmissions(inputs){
-  // transport: Trips per week * distance * factor -> convert to monthly
-  const weeklyKm = (inputs.transportKm || 0) * (inputs.transportTrips || 0);
-  const monthlyKm = weeklyKm * 52 / 12;
-  const transportFactor = FACTORS.transport[inputs.transportType] || 0;
-  const transportEm = monthlyKm * transportFactor; // kg/month
-
-  // electricity kWh per month * factor
-  const electrEm = (inputs.electricityKwh || 0) * FACTORS.electricityGrid;
-
-  // AC: hours/day * 30 * acPerHour
-  const acEm = (inputs.acHours || 0) * 30 * FACTORS.acPerHour;
-
-  // cooking: estimate cooking events per month = mealsPerDay * 30 (simplified: assume one cooking per day)
-  const cookingEm = (FACTORS.cooking[inputs.cookingFuel] || 0) * 30;
-
-  // food: diet factor * meals per day -> daily * 30 -> monthly
-  const foodDaily = (FACTORS.foodDiet[inputs.dietType] || 1.5) * (inputs.mealsPerDay || 3) / 3; // scale so base is per-day
-  const foodEm = foodDaily * 30;
-
-  // water
-  const waterEm = (inputs.waterLitres || 0) * 30 * FACTORS.waterLitreFactor;
-
-  // waste reduction multiplier
-  const wasteMulti = FACTORS.wasteReduce[inputs.wasteReduce] || 1;
-
-  // sum main
-  let subtotal = transportEm + electrEm + acEm + cookingEm + foodEm + waterEm;
-  subtotal = subtotal * wasteMulti; // apply waste reduction
-
-  return {
-    transportEm, electrEm, acEm, cookingEm, foodEm, waterEm,
-    subtotal
-  };
-}
-
-// determine status / color
-function statusForKg(monthlyKg){
-  // thresholds (customizable)
-  if(monthlyKg <= 250) return {label:'Safe', color: 'var(--safe)', textColor:'#002324'};
-  if(monthlyKg <= 800) return {label:'On Edge', color: 'var(--edge)', textColor:'#331f00'};
-  return {label:'High', color:'var(--danger)', textColor:'#1f0000'};
-}
-
-// playful green score (1..5)
-function computeGreenScore(monthlyKg){
-  if(monthlyKg <= 200) return 5;
-  if(monthlyKg <= 400) return 4;
-  if(monthlyKg <= 800) return 3;
-  if(monthlyKg <= 1400) return 2;
-  return 1;
-}
-
-// update visual (tree and balloon)
-function updateVisuals(monthlyKg){
-  // Leaves scale: safer -> bigger leaves
-  const scale = Math.max(0.45, Math.min(1.2, 1.3 - (monthlyKg / 2000)));
-  leaves.style.transform = `scale(${scale})`;
-
-  // Balloon size reflects monthlyKg: clamp
-  const balloonKg = Math.round(monthlyKg);
-  balloon.textContent = `${balloonKg} kg`;
-  const balloonSize = Math.max(60, Math.min(160, 160 * (monthlyKg / 2000)));
-  balloon.style.width = balloonSize + 'px';
-  balloon.style.height = Math.max(80, balloonSize * 1.2) + 'px';
-}
-
-// create tips
-function generateTips(em){
-  // treat each main category and propose the highest impact tip first
-  const tips = [];
-
-  // find biggest contributor
-  const contribs = [
-    {k:'Transport', v:em.transportEm, id:'transport'},
-    {k:'Electricity', v:em.electrEm, id:'electricity'},
-    {k:'Food', v:em.foodEm, id:'food'},
-    {k:'AC', v:em.acEm, id:'ac'},
-    {k:'Water', v:em.waterEm, id:'water'}
-  ];
-  contribs.sort((a,b)=>b.v-a.v);
-
-  // Tip generator with estimated monthly saving
-  contribs.forEach((c, i) => {
-    if(i===0){
-      // main tip
-      if(c.id==='transport'){
-        const save = Math.round(c.v * 0.4);
-        tips.push({
-          title:`Reduce transport emissions`,
-          text:`Try carpooling, shifting 2 weekly trips to bus/train, or using a bike for short journeys. Estimated saving: ~${save} kg/month.`,
-          estimate: save
-        });
-      } else if(c.id==='electricity'){
-        const save = Math.round(c.v * 0.25);
-        tips.push({
-          title:`Cut electricity use`,
-          text:`Switch to LED, unplug standby devices and reduce AC by 1 hour/day. Estimated saving: ~${save} kg/month.`,
-          estimate: save
-        });
-      } else if(c.id==='food'){
-        const save = Math.round(c.v * 0.3);
-        tips.push({
-          title:`Shift diet a bit`,
-          text:`Try 3 plant-forward meals per week (less red meat). Estimated saving: ~${save} kg/month.`,
-          estimate: save
-        });
-      } else {
-        const save = Math.round(c.v * 0.2);
-        tips.push({
-          title:`Small changes, big impact`,
-          text:`A few adjustments here (reduce AC/water/waste) can save ~${save} kg/month.`,
-          estimate: save
-        });
-      }
-    } else {
-      // secondary tips for next contributors
-      const save = Math.max(5, Math.round(c.v * 0.15));
-      tips.push({
-        title:`Reduce ${c.k}`,
-        text:`Target ${c.k.toLowerCase()} reductions (small behavior changes). Estimated saving: ~${save} kg/month.`,
-        estimate: save
-      });
-    }
-  });
-
-  // ensure we have at least 3 tips
-  while(tips.length < 3){
-    tips.push({title:'Plant trees or offset', text:'Consider planting trees or supporting local offset programs — choose high integrity projects.', estimate: 10});
-  }
-  return tips.slice(0,3);
-}
-
-// ---- UI interactions ----
-function readInputs(){
-  return {
-    transportType: transportType.value,
-    transportKm: Number(transportKm.value) || 0,
-    transportTrips: Number(transportTrips.value) || 0,
-    electricityKwh: Number(electricityKwh.value) || 0,
-    cookingFuel: cookingFuel.value,
-    acHours: Number(acHours.value) || 0,
-    dietType: dietType.value,
-    mealsPerDay: Number(mealsPerDay.value) || 3,
-    waterLitres: Number(waterLitres.value) || 0,
-    wasteReduce: wasteReduce.value
-  };
-}
-
-function showResultsFor(inputs){
-  const em = computeEmissions(inputs);
-  const monthly = em.subtotal;
-  resultsArea.style.display = 'block';
-  co2Total.textContent = formatKg(monthly);
-  breakdownText.textContent = `Breakdown: Transport ${Math.round(em.transportEm)}kg • Electricity ${Math.round(em.electrEm)}kg • Food ${Math.round(em.foodEm)}kg • Others ${Math.round(em.acEm + em.cookingEm + em.waterEm)}kg`;
-
-  // status
-  const s = statusForKg(monthly);
-  statusBadge.textContent = s.label;
-  statusBadge.style.color = s.textColor;
-  statusDot.style.background = s.color;
-  statusLabel.textContent = s.label;
-
-  // visual
-  updateVisuals(monthly);
-
-  // tips
-  const tips = generateTips(em);
-  topTip.innerHTML = `<strong>${tips[0].title}</strong><div class="sub" style="margin-top:6px">${tips[0].text}</div>`;
-  secondTip.innerHTML = `<strong>${tips[1].title}</strong><div class="sub" style="margin-top:6px">${tips[1].text}</div>`;
-  thirdTip.innerHTML = `<strong>${tips[2].title}</strong><div class="sub" style="margin-top:6px">${tips[2].text}</div>`;
-
-  // eco buddy text
-  ecoBuddyText.textContent = `Your monthly estimate is ${Math.round(monthly)} kg CO₂. Top action: ${tips[0].title}. Click "Apply tip estimate" to see a simulated improvement.`;
-
-  // green score
-  const score = computeGreenScore(monthly);
-  greenScoreText.textContent = `Score ${score}`;
-  scoreStars.textContent = '🌱'.repeat(score);
-
-  // clear saved msg
-  savedMsg.textContent = '';
-
-  // store last viewed in localStorage
-  localStorage.setItem('cfk_last_inputs', JSON.stringify({inputs, result:em, timestamp: new Date().toISOString()}));
-  lastSaved.textContent = nowISO();
-}
-
-// calculate button
-calculateBtn.addEventListener('click', ()=>{
-  const inputs = readInputs();
-  showResultsFor(inputs);
-});
-
-// reset inputs
-resetBtn.addEventListener('click', ()=>{
-  if(confirm('Reset all inputs to default?')){
-    document.querySelectorAll('input[type="number"]').forEach(i=>i.value='');
-    transportType.value='car';
-    cookingFuel.value='lpg';
-    dietType.value='omnivore';
-    transportTrips.value='10';
-    acHours.value='0';
-    wasteReduce.value='none';
-    resultsArea.style.display='none';
-    savedMsg.textContent='';
-  }
-});
-
-// apply tip: subtract estimate from total (simulate)
-applyTip.addEventListener('click', ()=>{
-  const last = JSON.parse(localStorage.getItem('cfk_last_inputs') || 'null');
-  if(!last){ alert('No calculation yet. Press Calculate first.'); return; }
-  // pick top tip estimate from UI by parsing text (simple)
-  // safer: regenerate tips and pick top
-  const inputs = last.inputs || readInputs();
-  const em = computeEmissions(inputs);
-  const tips = generateTips(em);
-  const newMonthly = Math.max(0, Math.round(em.subtotal - tips[0].estimate));
-  co2Total.textContent = `${newMonthly} kg CO₂ / month (est after tip)`;
-  ecoBuddyText.textContent = `If you follow: ${tips[0].title} → estimated saving ${tips[0].estimate} kg/month.`;
-  updateVisuals(newMonthly);
-});
-
-// share result
-shareBtn.addEventListener('click', ()=>{
-  const text = co2Total.textContent + ' • ' + breakdownText.textContent + ' • ' + statusBadge.textContent + ' • ' + greenScoreText.textContent;
-  navigator.clipboard?.writeText(text).then(()=>{
-    savedMsg.textContent = 'Result copied to clipboard ✅';
-    setTimeout(()=>savedMsg.textContent='',2600);
-  }).catch(()=>{
-    alert('Copy failed. You can select and copy manually.');
-  });
-});
-
-// snapshots (save & load)
-function loadSnapshots(){
-  const arr = JSON.parse(localStorage.getItem('cfk_snapshots') || '[]');
-  snapshotsList.innerHTML = '';
-  arr.slice().reverse().forEach((s, idx) => {
-    const el = document.createElement('div');
-    el.style.display='flex'; el.style.justifyContent='space-between'; el.style.alignItems='center';
-    el.style.padding='6px 8px'; el.style.borderRadius='8px'; el.style.background='rgba(255,255,255,0.01)';
-    el.innerHTML = `<div style="font-size:13px"><strong>${s.title||'Snapshot'}</strong><div class="sub">${s.timestampHuman}</div></div>
-                    <div style="display:flex;gap:8px">
-                      <button class="ghost" data-id="${s.id}" aria-label="load">Load</button>
-                      <button class="ghost" data-del="${s.id}" aria-label="delete">Delete</button>
-                    </div>`;
-    snapshotsList.appendChild(el);
-  });
-  // attach events
-  snapshotsList.querySelectorAll('button[data-id]').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const id = btn.getAttribute('data-id');
-      loadSnapshot(id);
-    });
-  });
-  snapshotsList.querySelectorAll('button[data-del]').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const id = btn.getAttribute('data-del');
-      deleteSnapshot(id);
-    });
-  });
-}
-
-function saveSnapshotNow(){
-  const inputs = readInputs();
-  const em = computeEmissions(inputs);
-  const arr = JSON.parse(localStorage.getItem('cfk_snapshots') || '[]');
-  const snapshot = {
-    id: 's_' + Date.now(),
-    timestamp: new Date().toISOString(),
-    timestampHuman: new Date().toLocaleString(),
-    inputs, result: em
-  };
-  arr.push(snapshot);
-  localStorage.setItem('cfk_snapshots', JSON.stringify(arr));
-  loadSnapshots();
-  lastSaved.textContent = nowISO();
-  savedMsg.textContent = 'Snapshot saved ✅';
-  setTimeout(()=>savedMsg.textContent='',2200);
-}
-
-function loadSnapshot(id){
-  const arr = JSON.parse(localStorage.getItem('cfk_snapshots') || '[]');
-  const s = arr.find(x=>x.id===id);
-  if(!s) return alert('Snapshot not found');
-  // populate inputs
-  const i = s.inputs;
-  transportType.value = i.transportType;
-  transportKm.value = i.transportKm || '';
-  transportTrips.value = i.transportTrips || 0;
-  electricityKwh.value = i.electricityKwh || '';
-  cookingFuel.value = i.cookingFuel || 'lpg';
-  acHours.value = i.acHours || 0;
-  dietType.value = i.dietType || 'omnivore';
-  mealsPerDay.value = i.mealsPerDay || 3;
-  waterLitres.value = i.waterLitres || '';
-  wasteReduce.value = i.wasteReduce || 'none';
-  showResultsFor(i);
-  savedMsg.textContent = 'Snapshot loaded';
-  setTimeout(()=>savedMsg.textContent='',1800);
-}
-
-function deleteSnapshot(id){
-  let arr = JSON.parse(localStorage.getItem('cfk_snapshots') || '[]');
-  arr = arr.filter(x=>x.id!==id);
-  localStorage.setItem('cfk_snapshots', JSON.stringify(arr));
-  loadSnapshots();
-  savedMsg.textContent = 'Snapshot deleted';
-  setTimeout(()=>savedMsg.textContent='',1400);
-}
-
-saveSnapshot.addEventListener('click', saveSnapshotNow);
-clearSnapshots.addEventListener('click', ()=>{
-  if(confirm('Clear all saved snapshots?')){
-    localStorage.removeItem('cfk_snapshots');
-    loadSnapshots();
-  }
-});
-
-// load last inputs on startup
-(function init(){
-  const last = JSON.parse(localStorage.getItem('cfk_last_inputs') || 'null');
-  if(last && last.inputs){
-    // populate fields but do not auto-calc (let user)
-    const i = last.inputs;
-    transportType.value = i.transportType || 'car';
-    transportKm.value = i.transportKm || '';
-    transportTrips.value = i.transportTrips || 10;
-    electricityKwh.value = i.electricityKwh || '';
-    cookingFuel.value = i.cookingFuel || 'lpg';
-    acHours.value = i.acHours || 0;
-    dietType.value = i.dietType || 'omnivore';
-    mealsPerDay.value = i.mealsPerDay || 3;
-    waterLitres.value = i.waterLitres || '';
-    wasteReduce.value = i.wasteReduce || 'none';
-    lastSaved.textContent = new Date(last.timestamp).toLocaleString();
-  }
-  loadSnapshots();
-})();
+const F={transport:{car:.192,motorbike:.09,bus:.05,train:.041,cycling:0,flight:.255},electricityGrid:.82,acPerHour:.9,cooking:{lpg:.185,electric:.82,biogas:.04,wood:.5},foodDiet:{omnivore:2.5,pescatarian:1.8,vegetarian:1.2,vegan:.9},waterLitreFactor:.0003,wasteReduce:{none:1,some:.92,good:.8,excellent:.6}};
+const INDIA=600,WORLD=2000;
+const $=id=>document.getElementById(id);
+const el={transportType:$('transportType'),transportKm:$('transportKm'),transportTrips:$('transportTrips'),electricityKwh:$('electricityKwh'),cookingFuel:$('cookingFuel'),acHours:$('acHours'),dietType:$('dietType'),mealsPerDay:$('mealsPerDay'),waterLitres:$('waterLitres'),wasteReduce:$('wasteReduce'),calculateBtn:$('calculateBtn'),resetBtn:$('resetBtn'),resultsArea:$('resultsArea'),co2Total:$('co2Total'),breakdownText:$('breakdownText'),statusBadge:$('statusBadge'),statusDot:$('statusDot'),statusLabel:$('statusLabel'),leaves:$('leaves'),balloon:$('balloon'),topTip:$('topTip'),secondTip:$('secondTip'),thirdTip:$('thirdTip'),applyTip:$('applyTip'),shareBtn:$('shareBtn'),savedMsg:$('savedMsg'),saveSnapshot:$('saveSnapshot'),snapshotsList:$('snapshotsList'),clearSnapshots:$('clearSnapshots'),lastSaved:$('lastSaved'),greenScoreText:$('greenScoreText'),scoreStars:$('scoreStars'),ecoBuddyText:$('ecoBuddyText'),indiaAvg:$('indiaAvg'),worldAvg:$('worldAvg')};
+el.indiaAvg.textContent=INDIA+' kg';el.worldAvg.textContent=WORLD+' kg';
+const fmt=n=>`${Math.round(n)} kg CO₂ / month`;const now=()=>new Date().toLocaleString();
+function compute(i){const wk=(i.transportKm||0)*(i.transportTrips||0);const mk=wk*52/12;const t=(F.transport[i.transportType]||0)*mk;const e=(i.electricityKwh||0)*F.electricityGrid;const ac=(i.acHours||0)*30*F.acPerHour;const cook=(F.cooking[i.cookingFuel]||0)*30;const fd=(F.foodDiet[i.dietType]||1.5)*(i.mealsPerDay||3)/3;const food=fd*30;const w=(i.waterLitres||0)*30*F.waterLitreFactor;const m=F.wasteReduce[i.wasteReduce]||1;const subtotal=(t+e+ac+cook+food+w)*m;return{t,e,ac,cook,food,w,subtotal}}
+function status(n){if(n<=250)return{label:'Safe',color:'var(--safe)',t:'#062a20'};if(n<=800)return{label:'On Edge',color:'var(--edge)',t:'#2d2104'};return{label:'High',color:'var(--danger)',t:'#2a0606'}}
+function score(n){if(n<=200)return 5;if(n<=400)return 4;if(n<=800)return 3;if(n<=1400)return 2;return 1}
+function visuals(n){const s=Math.max(.45,Math.min(1.15,1.25-(n/2000)));el.leaves.style.transform=`translateX(-50%) scale(${s})`;const k=Math.round(n);el.balloon.textContent=`${k} kg`;const b=Math.max(64,Math.min(150,150*(n/2000)));el.balloon.style.width=b+'px';el.balloon.style.height=Math.max(80,b*1.2)+'px'}
+function tips(em){const arr=[{k:'Transport',v:em.t,id:'transport'},{k:'Electricity',v:em.e,id:'electricity'},{k:'Food',v:em.food,id:'food'},{k:'AC',v:em.ac,id:'ac'},{k:'Water',v:em.w,id:'water'}].sort((a,b)=>b.v-a.v);const t=[];arr.forEach((c,i)=>{if(i===0){if(c.id==='transport'){const sv=Math.round(c.v*.4);t.push({title:'Reduce transport emissions',text:`Carpool, swap 2 weekly trips to bus/train, bike short runs. ~${sv} kg/month.`,estimate:sv})}else if(c.id==='electricity'){const sv=Math.round(c.v*.25);t.push({title:'Cut electricity use',text:`LEDs + kill standby + reduce AC 1h/day. ~${sv} kg/month.`,estimate:sv})}else if(c.id==='food'){const sv=Math.round(c.v*.3);t.push({title:'Shift diet a bit',text:`3 plant‑forward meals/week. ~${sv} kg/month.`,estimate:sv})}else{const sv=Math.round(c.v*.2);t.push({title:'Small changes, big impact',text:`Tweak AC/water/waste. ~${sv} kg/month.`,estimate:sv})}}else{const sv=Math.max(5,Math.round(c.v*.15));t.push({title:`Reduce ${c.k}`,text:`Target ${c.k.toLowerCase()} with small habits. ~${sv} kg/month.`,estimate:sv})}});while(t.length<3)t.push({title:'Plant/offset locally',text:'Support high‑integrity projects.',estimate:10});return t.slice(0,3)}
+function read(){return{transportType:el.transportType.value,transportKm:+el.transportKm.value||0,transportTrips:+el.transportTrips.value||0,electricityKwh:+el.electricityKwh.value||0,cookingFuel:el.cookingFuel.value,acHours:+el.acHours.value||0,dietType:el.dietType.value,mealsPerDay:+el.mealsPerDay.value||3,waterLitres:+el.waterLitres.value||0,wasteReduce:el.wasteReduce.value}}
+function render(i){const em=compute(i),m=em.subtotal;el.resultsArea.style.display='flex';el.co2Total.textContent=fmt(m);el.breakdownText.textContent=`Breakdown: Transport ${Math.round(em.t)}kg • Electricity ${Math.round(em.e)}kg • Food ${Math.round(em.food)}kg • Others ${Math.round(em.ac+em.cook+em.w)}kg`;const s=status(m);el.statusBadge.textContent=s.label;el.statusBadge.style.color=s.t;el.statusDot.style.background=s.color;el.statusLabel.textContent=s.label;visuals(m);const tp=tips(em);el.topTip.innerHTML=`<strong>${tp[0].title}</strong><div class="muted" style="margin-top:6px">${tp[0].text}</div>`;el.secondTip.innerHTML=`<strong>${tp[1].title}</strong><div class="muted" style="margin-top:6px">${tp[1].text}</div>`;el.thirdTip.innerHTML=`<strong>${tp[2].title}</strong><div class="muted" style="margin-top:6px">${tp[2].text}</div>`;const sc=score(m);el.greenScoreText.textContent=`Score ${sc}`;el.scoreStars.textContent='🌱'.repeat(sc);el.ecoBuddyText.textContent=`Your monthly estimate is ${Math.round(m)} kg CO₂. Top action: ${tp[0].title}. Use "Apply tip estimate" to simulate.`;localStorage.setItem('cfk_last_inputs',JSON.stringify({inputs:i,result:em,timestamp:new Date().toISOString()}));el.lastSaved.textContent=now();el.savedMsg.textContent=''}
+el.calculateBtn.addEventListener('click',()=>render(read()));
+el.resetBtn.addEventListener('click',()=>{document.querySelectorAll('input[type=number]').forEach(i=>i.value='');el.transportType.value='car';el.cookingFuel.value='lpg';el.dietType.value='omnivore';el.transportTrips.value='10';el.acHours.value='0';el.wasteReduce.value='none';el.resultsArea.style.display='none';el.savedMsg.textContent=''},{passive:true});
+el.applyTip.addEventListener('click',()=>{const last=JSON.parse(localStorage.getItem('cfk_last_inputs')||'null');if(!last){alert('Calculate first.');return}const i=last.inputs||read();const em=compute(i);const tp=tips(em);const nm=Math.max(0,Math.round(em.subtotal-tp[0].estimate));el.co2Total.textContent=`${nm} kg CO₂ / month (after tip)`;el.ecoBuddyText.textContent=`If you follow: ${tp[0].title} → save ~${tp[0].estimate} kg/month.`;visuals(nm)});
+el.shareBtn.addEventListener('click',async()=>{const txt=`${el.co2Total.textContent} • ${el.breakdownText.textContent} • ${el.statusBadge.textContent} • ${el.greenScoreText.textContent}`;try{await navigator.clipboard.writeText(txt);el.savedMsg.textContent='Copied ✅';setTimeout(()=>el.savedMsg.textContent='',2000)}catch{alert('Copy failed. Select text and copy.') }});
+function loadSnaps(){const arr=JSON.parse(localStorage.getItem('cfk_snaps')||'[]');el.snapshotsList.innerHTML='';arr.slice().reverse().forEach(s=>{const d=document.createElement('div');d.className='snap-row';d.innerHTML=`<div style="font-size:13px"><strong>${s.title||'Snapshot'}</strong><div class="muted" style="font-size:12px">${s.when}</div></div><div class="row"><button class="btn btn-ghost" data-id="${s.id}">Load</button><button class="btn btn-ghost" data-del="${s.id}">Delete</button></div>`;el.snapshotsList.appendChild(d)});el.snapshotsList.querySelectorAll('button[data-id]').forEach(b=>b.addEventListener('click',()=>useSnap(b.getAttribute('data-id'))));el.snapshotsList.querySelectorAll('button[data-del]').forEach(b=>b.addEventListener('click',()=>delSnap(b.getAttribute('data-del'))))}
+function saveSnap(){const i=read(),em=compute(i),arr=JSON.parse(localStorage.getItem('cfk_snaps')||'[]');arr.push({id:'s_'+Date.now(),when:new Date().toLocaleString(),inputs:i,result:em});localStorage.setItem('cfk_snaps',JSON.stringify(arr));loadSnaps();el.lastSaved.textContent=now();el.savedMsg.textContent='Snapshot saved ✅';setTimeout(()=>el.savedMsg.textContent='',1800)}
+function useSnap(id){const arr=JSON.parse(localStorage.getItem('cfk_snaps')||'[]');const s=arr.find(x=>x.id===id);if(!s)return;const i=s.inputs;el.transportType.value=i.transportType;el.transportKm.value=i.transportKm||'';el.transportTrips.value=i.transportTrips||0;el.electricityKwh.value=i.electricityKwh||'';el.cookingFuel.value=i.cookingFuel||'lpg';el.acHours.value=i.acHours||0;el.dietType.value=i.dietType||'omnivore';el.mealsPerDay.value=i.mealsPerDay||3;el.waterLitres.value=i.waterLitres||'';el.wasteReduce.value=i.wasteReduce||'none';render(i);el.savedMsg.textContent='Snapshot loaded';setTimeout(()=>el.savedMsg.textContent='',1400)}
+function delSnap(id){let arr=JSON.parse(localStorage.getItem('cfk_snaps')||'[]');arr=arr.filter(x=>x.id!==id);localStorage.setItem('cfk_snaps',JSON.stringify(arr));loadSnaps();el.savedMsg.textContent='Snapshot deleted';setTimeout(()=>el.savedMsg.textContent='',1200)}
+el.saveSnapshot.addEventListener('click',saveSnap);
+el.clearSnapshots.addEventListener('click',()=>{localStorage.removeItem('cfk_snaps');loadSnaps()});
+(function init(){const last=JSON.parse(localStorage.getItem('cfk_last_inputs')||'null');if(last&&last.inputs){const i=last.inputs;el.transportType.value=i.transportType||'car';el.transportKm.value=i.transportKm||'';el.transportTrips.value=i.transportTrips||10;el.electricityKwh.value=i.electricityKwh||'';el.cookingFuel.value=i.cookingFuel||'lpg';el.acHours.value=i.acHours||0;el.dietType.value=i.dietType||'omnivore';el.mealsPerDay.value=i.mealsPerDay||3;el.waterLitres.value=i.waterLitres||'';el.wasteReduce.value=i.wasteReduce||'none';el.lastSaved.textContent=new Date(last.timestamp).toLocaleString()}loadSnaps()})();
 </script>
 </body>
 </html>
